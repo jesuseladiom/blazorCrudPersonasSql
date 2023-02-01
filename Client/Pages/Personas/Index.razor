@@ -54,7 +54,7 @@ else {
     {
         var personaSeleccionada = personas.First(x => x.Id == idPersona);
         string mensaje = $"Deseas Borrar a la persona {personaSeleccionada.Nombre}?";
-        if (await JS.InvokeAsync<bool>("confirm", mensaje))   //javascript
+        if (await JS.Confirmar("Confirmar", mensaje, JSextensions.TipoMensajeSweetAlert.question))   //javascript
         {
             await Http.DeleteAsync($"personas/{idPersona}");
             await CargarPersonas();
