@@ -1,0 +1,12 @@
+﻿@page "/no-autorizado"
+@inject NavigationManager NavigationManager
+
+<h1>No Autorizado</h1>
+
+@code
+{
+    protected override void OnAfterRender(bool firstRender)
+    {
+        NavigationManager.NavigateTo($"/no-autorizado");
+    }
+}

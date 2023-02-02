@@ -1,4 +1,7 @@
 ﻿@page "/counter"
+@attribute [Authorize]  
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
 
 <PageTitle>Counter</PageTitle>
 
@@ -6,13 +9,42 @@
 
 <p role="status">Current count: @currentCount</p>
 
+@*para authentication*@
+@*<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <Authorized>
+        <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+    </Authorized>
+    <NotAuthorized>
+        <p>Usted No esta autorizado</p>
+    </NotAuthorized>
+    <Authorizing>
+        <p>Autorizando</p>
+    </Authorizing>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+*@
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationState { get; set; }
+
+
     private int currentCount = 0;
 
-    private void IncrementCount()
+    async Task IncrementCount()
     {
-        currentCount++;
+        var authState = await authenticationState;
+        var usuario = authState.User;
+        if (usuario.Identity.IsAuthenticated)
+        {
+            currentCount++;
+            Console.WriteLine(usuario.Identity.Name);
+        }
+        else
+        {
+            currentCount--;
+            Console.WriteLine("NO AUTORIZADO");
+        }
+
     }
 }
