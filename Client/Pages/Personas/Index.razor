@@ -1,4 +1,8 @@
 ﻿@page "/indice-personas"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+
 @inject HttpClient Http
 @inject IJSRuntime JS
 

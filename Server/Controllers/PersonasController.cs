@@ -1,4 +1,6 @@
 ﻿using BlazorCrudPersonasSql.Shared.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,6 +18,7 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<List<Persona>>> Get()
         {
             return await context.Personas.ToListAsync();

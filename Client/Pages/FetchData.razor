@@ -1,4 +1,8 @@
 ﻿@page "/fetchdata"
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Authorization
+
 @using BlazorCrudPersonasSql.Shared
 @inject HttpClient Http
 

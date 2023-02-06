@@ -10,11 +10,11 @@ namespace BlazorCrudPersonasSql.Client.Auth
         // este metodo determina si el usuario esta autenticado
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            //var identity = new ClaimsIdentity(new List<Claim>
-            //{
-            //    new Claim(ClaimTypes.Name, "Felipe")
-            //}, "prueba");
-            var identity = new ClaimsIdentity();
+            var identity = new ClaimsIdentity(new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, "Felipe")
+            }, "prueba");
+            //var identity = new ClaimsIdentity();
             return await Task.FromResult(new AuthenticationState(new ClaimsPrincipal(identity)));
 
 
