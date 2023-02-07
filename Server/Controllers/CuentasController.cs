@@ -5,7 +5,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-
 using BlazorCrudPersonasSql.Shared.Models;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -69,11 +68,11 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         {
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
-        new Claim(ClaimTypes.Name, userInfo.Email),
-        new Claim("miValor", "Lo que yo quiera"),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-    };
+                new Claim(JwtRegisteredClaimNames.UniqueName, userInfo.Email),
+                new Claim(ClaimTypes.Name, userInfo.Email),
+                new Claim("miValor", "Lo que yo quiera"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

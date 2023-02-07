@@ -1,0 +1,55 @@
+﻿@page "/login"
+<h3>Login</h3>
+@inject HttpClient http
+@inject NavigationManager uriHelper
+@inject ILoginService loginService
+@using Newtonsoft.Json;
+@inject IJSRuntime JS
+
+
+@using BlazorCRUD.Client.Auth
+
+<EditForm Model="userInfo" OnValidSubmit="LoginUsuario">
+    <DataAnnotationsValidator />
+
+    <div class="form-field">
+        <label>Email:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@userInfo.Email" />
+            <ValidationMessage For="@(() => userInfo.Email)" />
+        </div>
+    </div>
+    <div class="form-field">
+        <label>Password:</label>
+        <div>
+            <InputPassword Class="form-control" @bind-Value="@userInfo.Password" />
+            <ValidationMessage For="@(() => userInfo.Password)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Log in</button>
+
+</EditForm>
+
+@code {
+    private UserInfo userInfo = new UserInfo();
+
+    private async Task LoginUsuario()
+    {
+        var result = await http.PostAsJsonAsync<Object>("api/cuentas/login", userInfo);
+
+        if (result.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            //convertir a UserToken
+            string resultContent = await result.Content.ReadAsStringAsync();
+            var deserializedResult = JsonConvert.DeserializeObject<UserToken>(resultContent);
+
+            await loginService.Login(deserializedResult.Token);
+        }
+        else
+            await JS.MostrarMensaje("Contraseña incorrecta");
+
+        uriHelper.NavigateTo("");
+
+    }
+}

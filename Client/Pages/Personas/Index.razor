@@ -1,5 +1,8 @@
 ﻿@page "/indice-personas"
-@attribute [Authorize]
+@inject HttpClient Http
+@inject IJSRuntime JS
+@using System.IO
+
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Authorization
 
@@ -8,9 +11,13 @@
 
 <h3>Personas</h3>
 
-<div>
-    <a class="btn btn-success" href="crear-persona">Nueva Persona</a>
-</div>
+<AuthorizeView>
+    <Authorized>
+        <div class="form-group">
+            <a class="btn btn-success" href="crear-persona">Nueva Persona</a>
+        </div>
+    </Authorized>
+</AuthorizeView>
 
 @if (personas==null) {
     <text>Cargando...</text>
@@ -31,8 +38,12 @@ else {
             @foreach(var persona in personas){
                 <tr>
                     <td>
-                        <a class="btn btn-success" href="editar-persona/@persona.Id">Editar</a>
-                        <button class="btn btn-danger" @onclick="@(()=> BorrarPersona(persona.Id))">Borrar</button>
+                        <AuthorizeView>
+                            <Authorized>
+                                <a class="btn btn-success" href="editar-persona/@persona.Id">Editar</a>
+                                <button class="btn btn-danger" @onclick="@(() => BorrarPersona(persona.Id))">Borrar</button>
+                            </Authorized>
+                        </AuthorizeView>
                     </td>
                     <td>@persona.Id</td>
                     <td>@persona.Nombre</td>

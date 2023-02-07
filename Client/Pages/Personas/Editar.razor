@@ -1,7 +1,8 @@
 ﻿@page "/editar-persona/{IdPersona:int}"
 @inject HttpClient Http
 @inject NavigationManager NavManager
-
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization;
 
 <h3>Editar Personas</h3>
 

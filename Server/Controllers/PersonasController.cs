@@ -8,6 +8,7 @@ namespace BlazorCrudPersonasSql.Server.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class PersonasController:ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -18,6 +19,7 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<List<Persona>>> Get()
         {
@@ -25,6 +27,7 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         }
 
         [HttpGet("{id}", Name = "obtenerPersona")]
+        [AllowAnonymous]
         public async Task<ActionResult<Persona>> Get(int id)
         {
             return await context.Personas.FirstOrDefaultAsync(x => x.Id == id);

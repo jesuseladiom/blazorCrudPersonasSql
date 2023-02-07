@@ -1,0 +1,48 @@
+﻿@page "/registro"
+<h3>Registro</h3>
+@inject HttpClient http
+@inject NavigationManager uriHelper
+@inject ILoginService loginService
+@using Newtonsoft.Json;
+
+
+@using BlazorCRUD.Client.Auth
+
+<EditForm Model="userInfo" OnValidSubmit="CrearUsuario">
+    <DataAnnotationsValidator />
+
+    <div class="form-field">
+        <label>Email:</label>
+        <div>
+            <InputText Class="form-control" @bind-Value="@userInfo.Email" />
+            <ValidationMessage For="@(() => userInfo.Email)" />
+        </div>
+    </div>
+    <div class="form-field">
+        <label>Password:</label>
+        <div>
+            <InputPassword Class="form-control" @bind-Value="@userInfo.Password" />
+            <ValidationMessage For="@(() => userInfo.Password)" />
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrar</button>
+
+</EditForm>
+
+@code {
+    private UserInfo userInfo = new UserInfo();
+
+    private async Task CrearUsuario()
+    {
+        //UserToken user = new UserToken { Email = userInfo.Email, Password = userInfo.Password };
+        var result = await http.PostAsJsonAsync<Object>("api/cuentas/crear", userInfo);
+
+        //convertir a UserToken
+        string resultContent = await result.Content.ReadAsStringAsync();
+        var deserializedResult = JsonConvert.DeserializeObject<UserToken>(resultContent);
+
+        await loginService.Login(deserializedResult.Token);
+        uriHelper.NavigateTo("");
+    }
+}

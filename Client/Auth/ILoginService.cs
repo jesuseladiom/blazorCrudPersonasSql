@@ -1,6 +1,13 @@
-﻿namespace BlazorCrudPersonasSql.Client.Auth
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace BlazorCRUD.Client.Auth
 {
-    public class ILoginService
+    public interface ILoginService
     {
+        Task Login(string token);
+        Task Logout();
     }
 }

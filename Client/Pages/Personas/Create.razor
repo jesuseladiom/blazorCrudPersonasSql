@@ -1,6 +1,8 @@
 ﻿@page "/crear-persona"
 @inject HttpClient Http
 @inject NavigationManager NavManager
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Authorization;
 
 <h3>Crear Persona</h3>
 
