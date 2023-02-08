@@ -1,4 +1,5 @@
-﻿using BlazorCrudPersonasSql.Shared.Models;
+﻿using BlazorCrudPersonasSql.Server.Helpers;
+using BlazorCrudPersonasSql.Shared.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +22,29 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<Persona>>> Get()
+        public async Task<ActionResult<List<Persona>>> Get([FromQuery]Paginacion paginacion)
         {
-            return await context.Personas.ToListAsync();
+            var queryable= context.Personas.AsQueryable();  //asi tenemos un queryble para cada tabla
+            await HttpContext.InsertarParametrosPaginacionEnRespuesta(queryable, paginacion.CantidadAMostrar);
+            // paginar
+            //return await queryable.Paginar(paginacion).ToListAsync();
+
+            //meti este codigo porque no me dejo paginar
+            int skip = (paginacion.Pagina - 1) * paginacion.CantidadAMostrar;
+            List<Persona> res = new List<Persona>();
+            int i = 0; int cantidad = 0;
+            foreach (Persona persona in queryable)
+            {
+                i++;
+                if (i > skip)
+                {
+                    cantidad++;
+                    res.Add(persona);
+                    if (cantidad >= paginacion.CantidadAMostrar) break;
+                }
+            }
+            return  res.ToList();
+            //return await context.Personas.ToListAsync(); //sin paginar
         }
 
         [HttpGet("{id}", Name = "obtenerPersona")]

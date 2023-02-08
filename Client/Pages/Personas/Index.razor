@@ -5,6 +5,7 @@
 
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Authorization
+@using System.Text.Json;
 
 @inject HttpClient Http
 @inject IJSRuntime JS
@@ -19,10 +20,12 @@
     </Authorized>
 </AuthorizeView>
 
+<Paginacion PaginasTotales="paginasTotales" PaginaActual="paginaActual" PaginaSeleccionada="PaginaSeleccionada"></Paginacion>
+
 @if (personas==null) {
     <text>Cargando...</text>
 }
-else if (personas.Length==0) {
+else if (personas.Count==0) {
     <text>No hay Personas en la base de datos</text>
 }
 else {
@@ -54,15 +57,51 @@ else {
 }
 
 @code {
-    Persona[] personas {get; set;}
+    List<Persona> personas {get; set;}
+
+    private int paginaActual = 1;
+    private int paginasTotales;
+    private string nombrePersonaFiltro = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         await CargarPersonas();
     }
 
-    async Task CargarPersonas(){
-        personas = await Http.GetFromJsonAsync<Persona[]>("Personas");  //personasController
+    private async Task PaginaSeleccionada(int pagina)
+    {
+        paginaActual = pagina;
+        await CargarPersonas(pagina);
+    }
+
+    private async Task Filtrar()
+    {
+        paginaActual = 1;
+        await CargarPersonas();
+    }
+
+    private async Task Limpiar()
+    {
+        nombrePersonaFiltro = string.Empty;
+        paginaActual = 1;
+        await CargarPersonas();
+    }
+
+    async Task CargarPersonas(int pagina = 1, int cantidadRegistrosAMostrar = 10)
+    {
+        var httpResponse = await Http.GetAsync($"personas?pagina={pagina}&CantidadAMostrar={cantidadRegistrosAMostrar}");
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            paginasTotales = int.Parse(httpResponse.Headers.GetValues("totalPaginas").FirstOrDefault());
+
+            var responseString = await httpResponse.Content.ReadAsStringAsync();
+            personas = JsonSerializer.Deserialize<List<Persona>>(responseString,
+                new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+        else
+        {
+            Console.WriteLine("error");
+        }
     }
 
     async Task BorrarPersona(int idPersona)
