@@ -26,6 +26,10 @@
     private void CargarPaginas()
     {
         paginas = new List<PaginasModel>();
+
+        paginas.Add(new PaginasModel(1, true, "Primera"));
+
+
         var paginaAnteriorHabilitada = PaginaActual != 1;
         var paginaAnterior = (PaginaActual == 1) ? 1 : PaginaActual - 1;
         paginas.Add(new PaginasModel(paginaAnterior, paginaAnteriorHabilitada, "Anterior"));
@@ -43,6 +47,9 @@
         var paginaSiguienteHabilitada = PaginaActual != PaginasTotales;
         var paginaSiguiente = (PaginaActual == PaginasTotales) ? PaginasTotales : PaginaActual + 1;
         paginas.Add(new PaginasModel(paginaSiguiente, paginaSiguienteHabilitada, "Siguiente"));
+
+        paginas.Add(new PaginasModel(PaginasTotales, true, "Ultima"));
+
     }
 
     private async Task PaginaSeleccionadaInterno(PaginasModel pagina)
