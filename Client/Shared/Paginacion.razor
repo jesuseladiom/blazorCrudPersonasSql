@@ -14,7 +14,7 @@
 @code {
     [Parameter] public int PaginaActual { get; set; } = 1;
     [Parameter] public int PaginasTotales { get; set; }
-    [Parameter] public int Radio { get; set; } = 3;    //# de paginas antes y despues
+    [Parameter] public int Radio { get; set; } = 2;    //# de paginas antes y despues
     [Parameter] public EventCallback<int> PaginaSeleccionada { get; set; }
     List<PaginasModel> paginas = new List<PaginasModel>();
 
@@ -27,7 +27,7 @@
     {
         paginas = new List<PaginasModel>();
 
-        paginas.Add(new PaginasModel(1, true, "Primera"));
+        paginas.Add(new PaginasModel(1, true, "<<"));
 
 
         var paginaAnteriorHabilitada = PaginaActual != 1;
@@ -48,7 +48,7 @@
         var paginaSiguiente = (PaginaActual == PaginasTotales) ? PaginasTotales : PaginaActual + 1;
         paginas.Add(new PaginasModel(paginaSiguiente, paginaSiguienteHabilitada, "Siguiente"));
 
-        paginas.Add(new PaginasModel(PaginasTotales, true, "Ultima"));
+        paginas.Add(new PaginasModel(PaginasTotales, true, ">>"));
 
     }
 

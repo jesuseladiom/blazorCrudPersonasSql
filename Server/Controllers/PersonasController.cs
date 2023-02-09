@@ -22,9 +22,16 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<List<Persona>>> Get([FromQuery]Paginacion paginacion)
+        public async Task<ActionResult<List<Persona>>> Get([FromQuery] Paginacion paginacion, [FromQuery] string nombre)
         {
             var queryable= context.Personas.AsQueryable();  //asi tenemos un queryble para cada tabla
+            //checa si nombres no es vacio
+            if (!string.IsNullOrWhiteSpace(nombre) && nombre!="null")
+            {
+                queryable = queryable.Where(x => x.Nombre.Contains(nombre));
+            }
+
+            //aqui cuenta el total de regs y total de paginas
             await HttpContext.InsertarParametrosPaginacionEnRespuesta(queryable, paginacion.CantidadAMostrar);
             // paginar
             //return await queryable.Paginar(paginacion).ToListAsync();
