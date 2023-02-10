@@ -13,6 +13,8 @@ namespace BlazorCrudPersonasSql.Server
         }
 
         public DbSet<Persona> Personas { get; set; }
+        public DbSet<Estado> Estados { get; set; }
+        public DbSet<Pais> Paises { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
