@@ -18,13 +18,20 @@ namespace BlazorCrudPersonasSql.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Pais>>> Get()
         {
-            return await context.Paises.OrderBy(x => x.Nombre).ToListAsync();
+            return await context.Pais.OrderBy(x => x.Nombre).ToListAsync();
         }
 
         [HttpGet("{paisId}/estados")]
         public async Task<List<Estado>> GetEstados(int paisId)
         {
-            return await context.Estados.Where(x => x.PaisId == paisId)
+            return await context.Estado.Where(x => x.PaisId == paisId)
+                .OrderBy(x => x.Nombre).ToListAsync();
+        }
+
+        [HttpGet("{estadoId}/estado")]
+        public async Task<List<Estado>> GetEstado(int estadoId)
+        {
+            return await context.Estado.Where(x => x.Id == estadoId)
                 .OrderBy(x => x.Nombre).ToListAsync();
         }
     }

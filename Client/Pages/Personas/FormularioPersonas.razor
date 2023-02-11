@@ -68,13 +68,19 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (Persona.Estado != null)
+        //para saber que estamos en modo edicion
+        if (Persona.Id != 0)
         {
-            paisId = Persona.Estado.PaisId;
-            await CargarEstados(Persona.Estado.PaisId);
+            //paisId = Persona.Estado.PaisId;
+
+            List<Estado> obj = await http.GetFromJsonAsync<List<Estado>>($"api/paises/{Persona.EstadoId}/estado");
+            paisId = obj.First().PaisId;
+
+            //await CargarEstados(Persona.Estado.PaisId);
+            await CargarEstados(paisId);
         }
 
-        Paises = await http.GetJsonAsync<List<Pais>>("api/paises");
+        Paises = await http.GetFromJsonAsync<List<Pais>>("api/paises");
     }
 
     private async Task ValorPaisCambiado(int value)
@@ -95,6 +101,6 @@
 
     private async Task CargarEstados(int paisId)
     {
-        Estados = await http.GetJsonAsync<List<Estado>>($"api/paises/{paisId}/estados");
+        Estados = await http.GetFromJsonAsync<List<Estado>>($"api/paises/{paisId}/estados");
     }
 }
